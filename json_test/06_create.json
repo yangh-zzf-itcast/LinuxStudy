@@ -1,0 +1,13 @@
+{
+	"country":	"China",
+	"star":	[{
+			"name":	"Faye",
+			"address":	"beijing"
+		}, {
+			"name":	"Andy",
+			"address":	"HOngKong"
+		}, {
+			"name":	"LiuDH",
+			"address":	"zhoushan"
+		}]
+}

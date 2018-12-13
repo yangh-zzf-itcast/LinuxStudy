@@ -1,0 +1,44 @@
+{
+	"nu":"13735022173",
+	"companytype":"zhongtong",
+	"com":"zhongtong",
+	"updatatime":"2016-08-22 18:05:47",
+	"signname":"",
+	"condition":"F00",
+	"status":"200",
+	"codenumber":"7684535999",
+	"data":[
+		{
+			"time":"2016-04-10 13:17:42",
+			"location":"",
+			"context":"北京北苑的派件已签收，感谢您使用中通快递",
+			"ftime":"2016-04-10 13:17:42"
+		},
+		{
+			"time":"2016-04-10 07:36:05",
+			"location":"",
+			"context":"北京北苑的 刘肖1801xxx2156　正在派件",
+			"ftime":"2016-04-10 07:36:05"
+		},
+		{
+			"time":"2016-04-07 06:34:32",
+			"location":"",
+			"context":"快件已到达　北京北苑　上一站是北京",
+			"ftime":"2016-04-07 06:34:32"
+		},
+		{
+			"time":"2016-04-06 18:23:45",
+			"location":"",
+			"context":"深圳华侨城的　刘勇　已收件",
+			"ftime":"2016-04-06 18:23:45"
+		}
+	],
+	"signedtime":"",
+	"state":"3",
+	"departure":"",
+	"address":"",
+	"destination":"",
+	"message":"ok",
+	"ischeck":"1",
+	"pickuptime":""
+}
