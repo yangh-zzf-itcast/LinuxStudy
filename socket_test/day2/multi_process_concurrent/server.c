@@ -48,6 +48,13 @@ int main(int argc, char *argv[])
 
 	lfd = Socket(AF_INET, SOCK_STREAM, 0);
 
+	//使用服务器端口地址复用函数
+	int opt = 1;
+	ret = setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, (void *)&opt, sizeof(opt));
+	if(ret == -1){
+		perr_exit("setsockopt error");
+	}
+
 	Bind(lfd, (struct sockaddr*)&srv_addr, sizeof(srv_addr));
 
 	Listen(lfd, 128);
