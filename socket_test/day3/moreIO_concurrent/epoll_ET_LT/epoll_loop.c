@@ -45,13 +45,18 @@ struct myevent_s g_events[MAX_EVENTS + 1];		//自定义结构体+1  ----> listen
 /*	自定义结构体成员变量初始化	*/
 /*	设置事件，以及事件对应的文件描述符 回调函数等 */
 void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void*), void *arg){
+	//struct myevent_s *evf = (struct myevent_s*)arg;
+	
 	ev->fd = fd;
 	ev->call_back = call_back;
 	ev->events = 0;
 	ev->arg = arg;
 	ev->status = 0;
-	memset(ev->buf, 0, sizeof(ev->buf));	//bzero(ev->buf, sizeof(ev->buf));
-	ev->len = 0;
+	//memset(ev->buf, 0, sizeof(ev->buf));	//bzero(ev->buf, sizeof(ev->buf));
+	//ev->len = 0;
+
+	//memset(ev->buf, evf->buf, sizeof(evf->buf));
+	//ev->len = evf->len;
 	ev->last_active = time(NULL);		//调用eventset的事件 的函数
 
 	return;
@@ -158,6 +163,7 @@ void recvdata(int fd, int events, void *arg)
 
 		eventset(ev, fd, senddata, ev);		//将 fd 的回调函数设置为 senddata
 		eventadd(g_efd, EPOLLOUT, ev);		//将事件设置为 监听写事件， 重新添加到监听红黑树g_efd
+
 	}else if(len == 0){
 		close(ev->fd);
 		/* ev - g_events 地址相减 得到偏移元素位置 */
@@ -177,7 +183,7 @@ void senddata(int fd, int events, void *arg)
 	int len;
 
 	len = send(fd, ev->buf, ev->len, 0);
-
+	//printf("ev->fd = [%d], ev->len = [%d],  ev->buf = [%s]\n", ev->fd, ev->len, ev->buf);
 	//将 回调函数为 senddata 的fd 对应事件 从红黑树上摘除 
 	eventdel(g_efd, ev);
 
@@ -234,6 +240,9 @@ int main(int argc, char *argv[])
 	
 	g_efd = epoll_create(MAX_EVENTS + 1);	//创建红黑树 返回给全局变量g_efd, 
 											//+1的最后一个位置1025留给 服务器的 lfd
+	if(g_efd <= 0)
+		printf("create efd in %s err %s\n", __func__, strerror(errno));
+
 	initlistensocket(g_efd, port);			//初始化监听 socket 包含socket，bind，listen，accept
 
 	struct epoll_event events[MAX_EVENTS + 1];	//保存已经满足就绪事件的 文件描述符数组
