@@ -81,7 +81,7 @@ void eventadd(int efd, int events, struct myevent_s *ev)
 }
 
 /* 从epoll 监听的红黑树中 删除一个文件描述符*/
-void eventdel(int efd, int events, struct myevent_s *ev)
+void eventdel(int efd, struct myevent_s *ev)
 {
 	struct epoll_event epv = {0, {0}};
 
@@ -102,7 +102,7 @@ void acceptconn(int lfd, int events, void *arg)
 	socklen_t len = sizeof(cin);
 	int cfd, i;
 
-	if((cfd = accept(lfd, (struct sockaddr*)&cin, len)) == -1){
+	if((cfd = accept(lfd, (struct sockaddr*)&cin, &len)) == -1){
 		if(errno != EAGAIN && errno != EINTR){
 			printf("暂时不做出错处理");
 		}
@@ -124,7 +124,7 @@ void acceptconn(int lfd, int events, void *arg)
 		int flag = fcntl(cfd, F_GETFL);
 		flag |= O_NONBLOCK;
 		if((fcntl(cfd, F_SETFL, flag)) < 0){
-			prinf("%s: fcntl nonblocking failed, %s\n", __func__, strerror(errno));
+			printf("%s: fcntl nonblocking failed, %s\n", __func__, strerror(errno));
 			break;
 		}
 
@@ -132,11 +132,11 @@ void acceptconn(int lfd, int events, void *arg)
 		eventset(&g_events[i], cfd, recvdata, &g_events[i]);	//i 从 0开始 最大到MAX_EVENTS
 		eventadd(g_efd, EPOLLIN, &g_events[i]);		//绑定在全局变量 g_efd 上
 
-	}while(0)
+	}while(0);
 
 	/**/
 	printf("new connect [%s:%d][time:%ld], pos[%d]\n",
-			inet_ntoa(cin.sin_addr), ntohs(cin.sin_port), g_event[i].last_active, i); 
+			inet_ntoa(cin.sin_addr), ntohs(cin.sin_port), g_events[i].last_active, i); 
 	return;
 }
 
@@ -157,14 +157,14 @@ void recvdata(int fd, int events, void *arg)
 		printf("C[%d]:%s\n", fd, ev->buf);
 
 		eventset(ev, fd, senddata, ev);		//将 fd 的回调函数设置为 senddata
-		eventadd(g_efd, EPOLLOUT, ev)		//将事件设置为 监听写事件， 重新添加到监听红黑树g_efd
+		eventadd(g_efd, EPOLLOUT, ev);		//将事件设置为 监听写事件， 重新添加到监听红黑树g_efd
 	}else if(len == 0){
 		close(ev->fd);
 		/* ev - g_events 地址相减 得到偏移元素位置 */
-		printf("[fd = %s] pos[%ld], closed\n", fd, ev - g_events);
+		printf("[fd = %d] pos[%ld], closed\n", fd, ev - g_events);
 	}else{
 		close(ev->fd);						//对端关闭，关闭链接
-		printf("[fd = %d] pos[%ld], closed\n", fd, errno, strerror(error));
+		printf("[fd = %d] error[%d]: %s, closed\n", fd, errno,  strerror(errno));
 	}
 
 	return;
@@ -173,7 +173,7 @@ void recvdata(int fd, int events, void *arg)
 /* 发送数据 */
 void senddata(int fd, int events, void *arg)
 {
-	struct myevent_s *ev = (struct myevent_S *)arg;		//泛型指针强制类型转换
+	struct myevent_s *ev = (struct myevent_s *)arg;		//泛型指针强制类型转换
 	int len;
 
 	len = send(fd, ev->buf, ev->len, 0);
@@ -187,7 +187,7 @@ void senddata(int fd, int events, void *arg)
 		eventadd(g_efd, EPOLLIN, ev);		//事件设置为监听读事件，重新添加到监听红黑树g_efd
 	}else{									//关闭文件描述符, 关闭连接
 		close(ev->fd);
-		printf("send[fd = %d] error %s\n", fd, strerror);
+		printf("send[fd = %d] error[%d]: %s\n", fd, errno, strerror(errno));
 	}
 
 	return;
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 	unsigned short port = SERV_PORT;
 
 	if(argc == 2)
-		port = atoi(argv[1])	//使用用户制定端口
+		port = atoi(argv[1]);	//使用用户制定端口
 	
 	g_efd = epoll_create(MAX_EVENTS + 1);	//创建红黑树 返回给全局变量g_efd, 
 											//+1的最后一个位置1025留给 服务器的 lfd
@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
 		for(i = 0;i < 100;i++, checkops++){		//一次循环100个，使用checkops控制检测对象
 			if(checkops == MAX_EVENTS)		    //一轮检测结束
 				checkops = 0;
-			if(g_events[checkops].status) != 1)
+			if(g_events[checkops].status != 1)
 				continue;
 
 			long duration = now - g_events[checkops].last_active;	//用户不活跃的时间
