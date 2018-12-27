@@ -1,0 +1,35 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DEFAULT_THREAD_VARY	threadpool.c	17;"	d	file:
+DEFAULT_TIME	threadpool.c	15;"	d	file:
+MIN_WAIT_TASK_NUM	threadpool.c	16;"	d	file:
+adjust_tid	threadpool.c	/^	pthread_t adjust_tid;			\/* 存管理线程tid 管理线程用来管理线程池 *\/$/;"	m	struct:threadpool_t	file:
+arg	threadpool.c	/^	void *arg;						\/* 回调函数的参数 *\/$/;"	m	struct:__anon1	file:
+busy_thr_num	threadpool.c	/^	int busy_thr_num;				\/* 忙状态线程个数 *\/$/;"	m	struct:threadpool_t	file:
+false	threadpool.c	19;"	d	file:
+function	threadpool.c	/^	void *(*function)(void *);		\/* 函数指针作函数参数， 回调函数 *\/$/;"	m	struct:__anon1	file:
+live_thr_num	threadpool.c	/^	int live_thr_num;				\/* 当前存活的线程个数 *\/$/;"	m	struct:threadpool_t	file:
+lock	threadpool.c	/^	pthread_mutex_t lock;			\/* 用于锁住本结构体 *\/$/;"	m	struct:threadpool_t	file:
+main	threadpool.c	/^int main(void)$/;"	f
+max_thr_num	threadpool.c	/^	int max_thr_num;				\/* 线程池最大线程数 *\/$/;"	m	struct:threadpool_t	file:
+min_thr_num	threadpool.c	/^	int min_thr_num;				\/* 线程池最小线程数 *\/$/;"	m	struct:threadpool_t	file:
+process	threadpool.c	/^void *process(void *arg)$/;"	f
+queue_front	threadpool.c	/^	int queue_front;				\/* task_queue 队头下标 *\/$/;"	m	struct:threadpool_t	file:
+queue_max_size	threadpool.c	/^	int queue_max_size;				\/* task_queue队列可容忍任务数上限 *\/$/;"	m	struct:threadpool_t	file:
+queue_not_empty	threadpool.c	/^	pthread_cond_t queue_not_empty;	\/* 任务队列里不为空时，通知等待任务的线程，线程阻塞在此 *\/$/;"	m	struct:threadpool_t	file:
+queue_not_full	threadpool.c	/^	pthread_cond_t queue_not_full;	\/* 当任务队列满时，添加任务的线程阻塞，等待此条件变量，服务器阻塞在此 *\/$/;"	m	struct:threadpool_t	file:
+queue_rear	threadpool.c	/^	int queue_rear;					\/* task_queue 队尾下标 *\/$/;"	m	struct:threadpool_t	file:
+queue_size	threadpool.c	/^	int queue_size;					\/* task_queue 队中实际任务数 *\/$/;"	m	struct:threadpool_t	file:
+shutdown	threadpool.c	/^	int shutdown;					\/* 标志位，线程池的使用状态，true或者false *\/$/;"	m	struct:threadpool_t	file:
+task_queue	threadpool.c	/^	threadpool_task_t *task_queue;	\/* 任务队列（数组的首地址） *\/$/;"	m	struct:threadpool_t	file:
+thread_counter	threadpool.c	/^	pthread_mutex_t thread_counter;	\/* 记录忙碌状态线程个数的锁 -- busy_thr_num *\/$/;"	m	struct:threadpool_t	file:
+threadpool_create	threadpool.c	/^threadpool_t * threadpool_create(int min_thr_num, int max_thr_num, int queue_max_size)$/;"	f
+threadpool_t	threadpool.c	/^struct threadpool_t{$/;"	s	file:
+threadpool_task_t	threadpool.c	/^}threadpool_task_t;					\/* 各子线程任务结构体 *\/$/;"	t	typeref:struct:__anon1	file:
+threads	threadpool.c	/^	pthread_t *threads;				\/* 存放线程池中的每个线程的tid 数组 *\/$/;"	m	struct:threadpool_t	file:
+true	threadpool.c	18;"	d	file:
+wait_exit_thr_num	threadpool.c	/^	int wait_exit_thr_num;			\/* 要销毁的线程个数 *\/$/;"	m	struct:threadpool_t	file:
